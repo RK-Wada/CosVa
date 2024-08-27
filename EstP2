@@ -1,0 +1,75 @@
+-- Ejercicio 1
+-- 1.1
+sumatoria :: [Int] -> Int
+sumatoria (n:ns) = n + sumatoria ns 
+sumatoria [] = 0 
+
+--1.2
+longitud :: [a] -> Int
+longitud (x:xs) = 1 + longitud xd
+longitud [] = 0
+
+--1.3
+sucesores :: [Int] -> [Int]
+sucesores (x:xs) = x+1 : sucesores xs
+sucesores [] = [] 
+
+--1.4
+conjuncion :: [Bool] -> Bool
+-- Precondición: Debe haber al menos un Bool dentro de la lista a pasar.
+conjuncion (b:bs) = b && conjuncion bs 
+conjuncion [] = True
+
+--1.5
+disyuncion :: [Bool] -> Bool
+-- Precondición: Debe haber al menos un Bool dentro de la lista a pasar.
+disyuncion (b:bs) = b || disyuncion bs 
+disyuncion [] = False 
+
+--1.6
+aplanar :: [[a]] -> [a]
+aplanar (x:xs) = x ++ aplanar xs
+aplanar [] = [] 
+
+--1.7
+pertenece :: Eq a => a -> [a] -> Bool 
+pertenece e (x:xs) = e == x || pertenece e xs 
+pertenece _ [] = False 
+
+--1.8
+apariciones :: Eq a => a -> [a] -> Int 
+apariciones e (x:xs) = if e == x 
+                       then 1 + apariciones e xs
+                       else 0 + apariciones e xs
+apariciones _ [] = 0
+
+--1.9
+losMenoresA :: Int -> [Int] -> [Int]
+losMenoresA e (n:ns) = if e > n 
+                       then n : losMenoresA e xs
+                       else losMenoresA e xs
+losMenoresA _ [] = [] 
+
+--1.10 
+lasDeLongitudMayorA :: Int -> [[a]] -> [[a]]
+lasDeLongitudMayorA n (x:xs) = if longitud x > n 
+                               then x : lasDeLongitudMayorA n xs 
+                               else lasDeLongitudMayorA n xs
+lasDeLongitudMayorA _ [] = [] 
+
+--1.11
+agregarAlFinal :: [a] -> a -> [a]
+agregarAlFinal (x:xs) a = x : agregarAlFinal xs a 
+agregarAlFinal [] a     = [a] 
+
+--1.12
+agregar :: [a] -> [a] -> [a]
+agregar (x:xs) l2 = x : agregar xs l2 
+agregar [] l2      = l2 
+
+--1.13
+reversa :: [a] -> [a] 
+reversa (x:xs) = agregarAlFinal (reversa xs) x
+reversa [] = []
+
+--1.14
