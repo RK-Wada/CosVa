@@ -72,4 +72,16 @@ reversa :: [a] -> [a]
 reversa (x:xs) = agregarAlFinal (reversa xs) x
 reversa [] = []
 
+--REVISION
+
 --1.14
+zipMaximos :: [Int] -> [Int] -> [Int]
+zipMaximos (n1:ns1) (n2:ns2) = if n1>=n2 
+                               then n1 : zipMaximos ns1 ns2 
+                               else n2 : zipMaximos ns1 ns2 
+zipMaximos _        _        = []
+
+--1.15
+elMinimo :: Ord a => [a] -> a
+elMinimo ()
+
