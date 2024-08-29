@@ -72,16 +72,52 @@ reversa :: [a] -> [a]
 reversa (x:xs) = agregarAlFinal (reversa xs) x
 reversa [] = []
 
---REVISION
-
 --1.14
 zipMaximos :: [Int] -> [Int] -> [Int]
 zipMaximos (n1:ns1) (n2:ns2) = if n1>=n2 
                                then n1 : zipMaximos ns1 ns2 
                                else n2 : zipMaximos ns1 ns2 
-zipMaximos _        _        = []
+zipMaximos _         _        = []
+zipMaximos ns1       _        = ns1  
+zipMaximos _        ns2       = ns2 
 
 --1.15
 elMinimo :: Ord a => [a] -> a
-elMinimo ()
+elMinimo [] = [] 
+elMinimo (x:[]) = x  
+elMinimo (x:xs) = minimoEntre x (elMinimo xs) 
+
+minimoEntre :: a -> a -> a 
+minimoEntre a a2 = if a>a2 then a
+                           else a2 
+
+--Ejercicio 2
+--2.1
+factorial :: Int -> Int 
+--Precond: n no puede ser negativo.
+factorial 0 = 1
+factorial n  = n * factorial (n-1) 
+
+--2.2 
+cuentaRegresiva :: Int -> [Int]
+cuentaRegresiva 0 = []
+cuentaRegresiva n = n : cuentaRegresiva (n-1) 
+
+--2.3 
+repetir :: Int -> a -> [a] 
+repetir n e = e : repetir (n-1) 
+repetir 0 _ = [] 
+
+--2.4
+losPrimeros :: Int -> [a] -> [a] 
+losPrimeros n (x:xs) = x : losPrimeros (n-1) xs
+losPrimeros 0 (x:xs) = []
+
+--2.5 
+sinLosPrimeros :: Int -> [a] -> [a]
+sinLosPrimeros 0 a      = a 
+sinLosPrimeros n (x:xs) = sinLosPrimeros (n-1) xs 
+
+--Ejercicio 3
+--1
 
