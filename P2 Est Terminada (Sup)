@@ -1,0 +1,338 @@
+-- Ejercicio 1
+-- 1.1
+sumatoria :: [Int] -> Int
+sumatoria (n:ns) = n + sumatoria ns 
+sumatoria [] = 0 
+
+--1.2
+longitud :: [a] -> Int
+longitud (x:xs) = 1 + longitud xs
+longitud [] = 0
+
+--1.3
+sucesores :: [Int] -> [Int]
+sucesores (x:xs) = x+1 : sucesores xs
+sucesores [] = [] 
+
+--1.4
+conjuncion :: [Bool] -> Bool
+-- Precondición: Debe haber al menos un Bool dentro de la lista a pasar.
+conjuncion (b:bs) = b && conjuncion bs 
+conjuncion [] = True
+
+--1.5
+disyuncion :: [Bool] -> Bool
+-- Precondición: Debe haber al menos un Bool dentro de la lista a pasar.
+disyuncion (b:bs) = b || disyuncion bs 
+disyuncion [] = False 
+
+--1.6
+aplanar :: [[a]] -> [a]
+aplanar (x:xs) = x ++ aplanar xs
+aplanar [] = [] 
+
+--1.7
+pertenece :: Eq a => a -> [a] -> Bool 
+pertenece e (x:xs) = e == x || pertenece e xs 
+pertenece _ [] = False 
+
+--1.8
+apariciones :: Eq a => a -> [a] -> Int 
+apariciones e (x:xs) = if e == x 
+                       then 1 + apariciones e xs
+                       else 0 + apariciones e xs
+apariciones _ [] = 0
+
+--1.9
+losMenoresA :: Int -> [Int] -> [Int]
+losMenoresA e (n:ns) = if e > n 
+                       then n : losMenoresA e ns 
+                       else losMenoresA e ns 
+losMenoresA _ [] = [] 
+
+--1.10 
+lasDeLongitudMayorA :: Int -> [[a]] -> [[a]]
+lasDeLongitudMayorA n (x:xs) = if longitud x > n 
+                               then x : lasDeLongitudMayorA n xs 
+                               else lasDeLongitudMayorA n xs
+lasDeLongitudMayorA _ [] = [] 
+
+--1.11
+agregarAlFinal :: [a] -> a -> [a]
+agregarAlFinal (x:xs) a = x : agregarAlFinal xs a 
+agregarAlFinal [] a     = [a] 
+
+--1.12
+agregar :: [a] -> [a] -> [a]
+agregar (x:xs) l2 = x : agregar xs l2 
+agregar [] l2      = l2 
+
+--1.13
+reversa :: [a] -> [a] 
+reversa (x:xs) = agregarAlFinal (reversa xs) x
+reversa [] = []
+
+--1.14
+zipMaximos :: [Int] -> [Int] -> [Int]
+zipMaximos (n1:ns1) (n2:ns2) = if n1>=n2 
+                               then n1 : zipMaximos ns1 ns2 
+                               else n2 : zipMaximos ns1 ns2 
+zipMaximos _         _        = []
+zipMaximos ns1       _        = ns1  
+zipMaximos _        ns2       = ns2 
+
+--1.15
+elMinimo :: Ord a => [a] -> a
+--Precond: La lista no debe ser vacía.
+elMinimo (x:[]) = x  
+elMinimo (x:xs) = minimoEntre x (elMinimo xs) 
+
+minimoEntre :: Ord a => a -> a -> a
+minimoEntre a a2 = if a>a2 then a
+                           else a2 
+
+--Ejercicio 2
+--2.1
+factorial :: Int -> Int 
+--Precond: n no puede ser negativo.
+factorial 0 = 1
+factorial n  = n * factorial (n-1) 
+
+--2.2 
+cuentaRegresiva :: Int -> [Int]
+cuentaRegresiva 0 = []
+cuentaRegresiva n = n : cuentaRegresiva (n-1) 
+
+--2.3 
+repetir :: Int -> a -> [a] 
+repetir n e = e : repetir (n-1) e
+repetir 0 _ = [] 
+
+--2.4
+losPrimeros :: Int -> [a] -> [a] 
+losPrimeros n (x:xs) = x : losPrimeros (n-1) xs
+losPrimeros 0 (x:xs) = []
+
+--2.5 
+sinLosPrimeros :: Int -> [a] -> [a]
+sinLosPrimeros 0 a      = a 
+sinLosPrimeros n (x:xs) = sinLosPrimeros (n-1) xs 
+
+--Ejercicio 3
+--1 
+data Persona = P String Int 
+              -- Nombre Edad
+
+nombre :: Persona -> String 
+nombre (P n _) = n 
+
+edad :: Persona -> Int 
+edad (P _ m) = m 
+
+--a
+mayoresA :: Int -> [Persona] -> [Persona] 
+mayoresA e (p:[]) = []
+mayoresA e (p:ps) = if (edad p) > e 
+                    then p : mayoresA e ps 
+                    else mayoresA e ps 
+
+--b 
+promedioEdad :: [Persona] -> Int 
+-- Precon: la lista debe poseer al menos una persona dentro.
+promedioEdad listaPersonas = div (sumatoriaEdad listaPersonas) (length listaPersonas)
+
+sumatoriaEdad :: [Persona] -> Int 
+sumatoriaEdad [] = 0 
+sumatoriaEdad (p:ps) = edad p + sumatoriaEdad ps 
+
+--c
+elMasViejo :: [Persona] -> Persona
+--Precon: la lista debe poseer al menos una persona dentro.
+elMasViejo (p:[]) = p 
+elMasViejo (p:ps) = laQueEsMayor p (elMasViejo ps)
+
+laQueEsMayor :: Persona -> Persona -> Persona 
+laQueEsMayor p1 p2 = if edad p1 > edad p2 
+                     then p1 
+                     else p2
+
+--2
+data TipoDePokemon = Agua | Fuego | Planta 
+data Pokemon = ConsPokemon TipoDePokemon Int 
+data Entrenador = ConsEntrenador String [Pokemon] 
+
+--a 
+cantPokemon :: Entrenador -> Int 
+cantPokemon (ConsEntrenador _ pokemones) = length pokemones
+
+--b 
+cantPokemonDe :: TipoDePokemon -> Entrenador -> Int
+cantPokemonDe tipo (ConsEntrenador _ pokemones) = length (cantidadDeEn tipo pokemones)
+
+cantidadDeEn :: TipoDePokemon -> [Pokemon] -> [Pokemon]
+cantidadDeEn _ []          = []
+cantidadDeEn tipo (p:ps) = if sonDelMismoTipo (tipoDePokemonDe p) tipo 
+                           then p : cantidadDeEn tipo ps
+                           else cantidadDeEn tipo ps 
+
+sonDelMismoTipo :: TipoDePokemon -> TipoDePokemon -> Bool
+sonDelMismoTipo Agua  Agua    = True 
+sonDelMismoTipo Fuego Fuego   = True
+sonDelMismoTipo Planta Planta = True 
+sonDelMismoTipo _      _      = False 
+
+tipoDePokemonDe :: Pokemon -> TipoDePokemon
+tipoDePokemonDe (ConsPokemon tipo _) = tipo
+
+--c
+cuantosDeTipo_De_LeGananATodosLosDe_ :: TipoDePokemon -> Entrenador -> Entrenador -> Int
+cuantosDeTipo_De_LeGananATodosLosDe_ tipo (ConsEntrenador _ listaP1) (ConsEntrenador _ listaP2) = cuantosSonDelTipo_En tipo (pokemonesDe_QueLeGananATodosLosDe_ listaP1 listaP2)  
+
+pokemonesDe_QueLeGananATodosLosDe_ :: [Pokemon] -> [Pokemon] -> [Pokemon] 
+pokemonesDe_QueLeGananATodosLosDe_ (p1:ps1) ps2 = if (tienenLaMismaCantidad (cantidadALaQue_GanaDe p1 ps2) ps2) 
+                                                       then p1 : pokemonesDe_QueLeGananATodosLosDe_ ps1 ps2 
+                                                       else pokemonesDe_QueLeGananATodosLosDe_ ps1 ps2
+pokemonesDe_QueLeGananATodosLosDe_ []  ps2 = []
+pokemonesDe_QueLeGananATodosLosDe_ ps1 []  = [] 
+
+tienenLaMismaCantidad :: Int -> [Pokemon] -> Bool
+tienenLaMismaCantidad n listaP = n == length listaP 
+
+cantidadALaQue_GanaDe :: Pokemon -> [Pokemon] -> Int
+cantidadALaQue_GanaDe pk listaP = length (losQue_GanaDe pk listaP)
+
+losQue_GanaDe pk (p:ps) = if leGana_A_ (tipoDePokemonDe pk) (tipoDePokemonDe p) 
+                               then p: (losQue_GanaDe pk ps) 
+                               else losQue_GanaDe pk ps
+losQue_GanaDe pk [] = []
+
+cuantosSonDelTipo_En :: TipoDePokemon -> [Pokemon] -> Int 
+cuantosSonDelTipo_En tipo (p:ps) = if sonDelMismoTipo tipo (tipoDePokemonDe p)  
+                                    then 1 + cuantosSonDelTipo_En tipo ps
+                                    else cuantosSonDelTipo_En tipo ps
+cuantosSonDelTipo_En _ [] = 0
+
+leGana_A_ :: TipoDePokemon -> TipoDePokemon -> Bool
+leGana_A_ Agua Fuego  = True
+leGana_A_ Fuego Planta = True
+leGana_A_ Planta Agua  = True 
+leGana_A_ _      _     = False
+
+--d
+esMaestroPokemon :: Entrenador -> Bool
+esMaestroPokemon (ConsEntrenador _ listaP) = (hayAlMenosUnPDelTipo_En Planta listaP) && (hayAlMenosUnPDelTipo_En Fuego listaP) && (hayAlMenosUnPDelTipo_En Agua listaP)
+
+hayAlMenosUnPDelTipo_En :: TipoDePokemon -> [Pokemon] -> Bool 
+hayAlMenosUnPDelTipo_En tipo (p:ps) = sonDelMismoTipo tipo (tipoDePokemonDe p) || hayAlMenosUnPDelTipo_En tipo ps 
+hayAlMenosUnPDelTipo_En _    []     = False  
+
+--2
+data Seniority = Junior | SemiSenior | Senior 
+data Proyecto = ConsProyecto String 
+data Rol = Developer Seniority Proyecto | Management Seniority Proyecto 
+data Empresa = ConsEmpresa [Rol] 
+
+--a 
+proyectos :: Empresa -> [Proyecto] 
+proyectos (ConsEmpresa listaR) = sinRepetidos (proyectosDe listaR) 
+
+proyectosDe :: [Rol] -> [Proyecto] 
+proyectosDe (r:rs) = proyEn r : proyectosDe rs 
+proyectosDe [] = []
+
+proyEn :: Rol -> Proyecto 
+proyEn (Developer _ proyecto)  = proyecto 
+proyEn (Management _ proyecto) = proyecto 
+
+sinRepetidos :: [Proyecto] -> [Proyecto] 
+sinRepetidos [] = [] 
+sinRepetidos (p:ps) = agregarSiNoEsta p (sinRepetidos ps)
+
+agregarSiNoEsta :: Proyecto -> [Proyecto] -> [Proyecto]
+agregarSiNoEsta p ps = if estaElProyecto p ps 
+                        then ps 
+                        else p : ps
+
+estaElProyecto :: Proyecto -> [Proyecto] -> Bool
+estaElProyecto _ [] = False 
+estaElProyecto p1 (p:ps) = if esElMismoProyecto p1 p 
+                            then True 
+                            else estaElProyecto p1 ps
+
+esElMismoProyecto2 :: Proyecto -> Proyecto -> Bool 
+esElMismoProyecto2 (ConsProyecto x) (ConsProyecto y) = x == y 
+
+--b 
+losDevSenior :: Empresa -> [Proyecto] -> Int
+losDevSenior (ConsEmpresa rs) ps = cantDeSeniorEnProyectos (losSenior rs) ps
+
+losSenior :: [Rol] -> [Rol]
+losSenior [] = [] 
+losSenior (r:rs) = if esDevSenior r 
+                        then r : losSenior rs 
+                        else losSenior rs 
+
+esDevSenior :: Rol -> Bool 
+esDevSenior (Developer s _) = esSenior s 
+esDevSenior _ = False
+
+esSenior :: Seniority -> Bool 
+esSenior Senior = True 
+esSenior _ = False 
+
+cantDeSeniorEnProyectos :: [Rol] -> [Proyecto] -> Int 
+cantDeSeniorEnProyectos [] _ = 0 
+cantDeSeniorEnProyectos (r:rs) ps = unoSi (estaElProyecto (proyectoDeRol r) ps) + cantDeSeniorEnProyectos rs ps
+
+--c 
+cantQueTrabajanEn :: [Proyecto] -> Empresa -> Int 
+cantQueTrabajanEn listaP (ConsEmpresa listaR) = length (empleadosDe_QueTrabajanEnAlMenosUn_ listaR listaP)
+
+empleadosDe_QueTrabajanEnAlMenosUn_ :: [Rol] -> [Proyecto] -> [Rol]
+empleadosDe_QueTrabajanEnAlMenosUn_ (r:rs) listaProyectos = if trabajaEnAlguno r listaProyectos 
+                                                            then r : empleadosDe_QueTrabajanEnAlMenosUn_ rs listaProyectos
+                                                            else empleadosDe_QueTrabajanEnAlMenosUn_ rs listaProyectos 
+empleadosDe_QueTrabajanEnAlMenosUn_ [] listaProyectos = []
+
+trabajaEnAlguno :: Rol -> [Proyecto] -> Bool
+trabajaEnAlguno rol listaP = length listaP == length (enCualesTrabajaDe rol listaP)
+
+enCualesTrabajaDe :: Rol -> [Proyecto] -> [Proyecto] 
+enCualesTrabajaDe rol (p:ps) = if esElMismoProyecto2 (proyectoDeRol rol) p 
+                                          then p : enCualesTrabajaDe rol ps
+                                          else enCualesTrabajaDe rol ps
+enCualesTrabajaDe _ [] = [] 
+
+--d 
+asignadosPorProyecto :: Empresa -> [(Proyecto, Int)]
+asignadosPorProyecto emp = personasEnCadaProyecto (proyectos emp) (proyectosDeTodasLasPersona emp)
+
+proyectosDeTodasLasPersona :: Empresa -> [Proyecto] 
+proyectosDeTodasLasPersona (ConsEmpresa rs) = proyectosDeCadaRol rs 
+
+personasEnCadaProyecto :: [Proyecto] -> [Proyecto] -> [(Proyecto, Int)] 
+personasEnCadaProyecto [] _  = []
+personasEnCadaProyecto _  [] = []
+personasEnCadaProyecto (p1:ps1) ps2 = paresDe p1 (personasEnProyecto p1 ps2) : personasEnCadaProyecto ps1 ps2
+
+personasEnProyecto :: Proyecto -> [Proyecto] -> Int 
+personasEnProyecto _ [] = 0
+personasEnProyecto p1 (p2:ps2) = unoSi (esElMismoProyecto p1 p2) + personasEnProyecto p1 ps2 
+
+paresDe :: Proyecto -> Int -> (Proyecto, Int)
+paresDe p n = (p, n)
+
+proyectosDeCadaRol :: [Rol] -> [Proyecto]
+proyectosDeCadaRol [] = []
+proyectosDeCadaRol (r:rs) = proyectoDeRol r : proyectosDeCadaRol rs
+
+proyectoDeRol :: Rol -> Proyecto
+proyectoDeRol (Developer _ proyecto) = proyecto
+proyectoDeRol (Management _ proyecto) = proyecto
+
+esElMismoProyecto :: Proyecto -> Proyecto -> Bool 
+esElMismoProyecto (ConsProyecto x) (ConsProyecto y) = x == y
+
+unoSi :: Bool -> Int
+unoSi True = 1 
+unoSi _ = 0
