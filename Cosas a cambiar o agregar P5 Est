@@ -1,0 +1,89 @@
+--1
+setToList :: Eq a => Set a -> [a]
+setToList (Set x) = x
+
+--2
+CAMBIAR 
+sizeS :: Eq a => Set a -> Int
+sizeS (Set xs) = length xs
+
+--3
+removeS :: Eq a => a -> Set a -> Set a
+removeS x (Set xs) = Set (quitarDe x xs) 
+
+quitarDe :: a -> [a]
+quitarDe _ [] = []
+quitarDe a (x:xs) = if (a /= x) 
+                    then x : quitarDe a xs 
+                    else quitarDe a xs
+
+--4  f del 2.3
+unionS :: Eq a => Set a -> Set a -> Set a
+unionS (Set xsa) (Set xsb) = Set (xsa ++ xsb) 
+
+--5
+CAMBIAR 
+setToList :: Eq a => Set a -> [a]
+setToList (Set x) = [x]
+
+
+
+
+COSAS HECHAs EN CLASE
+--Ejercicio 3
+--3.1
+--a 
+emptyQ :: Queue a 
+emptyQ = Queue []
+
+--b 
+isEmptyQ :: Queue a -> Bool 
+isEmptyQ (Queue x) = null x  
+
+--c
+enqueue :: a -> Queue a -> Queue a
+enqueue x (Queue xs) = Queue (xs ++ [x])
+
+--d
+firstQ :: Queue a -> a
+firstQ (Queue xs) = if null xs 
+                    then error "Queue vacía"
+                    else head xs 
+
+--e
+dequeue :: Queue a -> Queue a
+dequeue (Queue xs) = if null xs 
+                     then error "Queue vacía"
+                     else tail xs 
+
+--3.2
+--a
+emptyQ :: Queue a 
+emptyQ = Queue []
+
+--b 
+isEmptyQ :: Queue a -> Bool 
+isEmptyQ (Queue x) = null x  
+
+--c
+enqueue :: a -> Queue a -> Queue a
+enqueue x (Queue xs) = Queue (x : xs)
+
+--d
+firstQ :: Queue a -> a
+firstQ (Queue xs) = if null xs 
+                    then error "Queue vacía"
+                    else last xs
+
+--e
+dequeue :: Queue a -> Queue a
+dequeue (Queue xs) = if null xs 
+                     then error "Queue vacía"
+                     else Queue (init xs) 
+
+--3.3
+--a
+
+
+
+
