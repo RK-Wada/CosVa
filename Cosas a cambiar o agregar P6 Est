@@ -1,0 +1,96 @@
+--e
+--Costo O(n^2) siendo n la cantidad de elementos en la lista clave-valor. Se realiza la función agregar valor de costo O(n) y recursión sobre la misma.
+agruparEq :: Eq k => [(k, v)] -> Map k [v]
+agruparEq [] = emptyM 
+agruparEq ((k,v):kvs) = agregarValor k v (agruparEq kvs)
+
+--Costo O(n) siendo n la cantidad de claves del map, se realizan las funciones lookupM y assocM de coste O(1).
+agregarValor :: k -> v -> Map k [v] -> Map k [v]
+agregarValor k v map = case lookupM k map of 
+                        Nothing -> assocM k [v] map
+                        Just v2 -> assocM k (v:v2) map 
+
+--f
+--Costo O(n + m^2) siendo n la cantidad de claves en la lista y m la cantidad de claves del map. Se realiza recursión sobre la lista y las funciones lookupM y assocM por cada recursión.
+incrementar :: Eq k => [k] -> Map k Int -> Map k Int
+incrementar [] map = map 
+incrementar (k:ks) map = case lookupM k map of 
+                            Nothing -> incrementar ks map 
+                            Just v  -> assocM k (v+1) (incrementar ks map) 
+
+--g
+--Costo 
+mergeMaps:: Eq k => Map k v -> Map k v -> Map k v
+mergeMaps map1 map2 = unirA (mapToList map1) map2 
+
+--Costo O(n + m^2) siendo n la cantidad de claves en la lista clave-valor y m la cantidad de claves en el map.
+--Se hace recursión sobre la lista de clave-valor y las funciónes lookupM y assocM por cada clave, ambas de valor O(n).
+unirA :: [(k,v)] -> Map k v -> Map k v 
+unirA [] map          = map 
+unirA ((k,v):kvs) map = case lookupM k map of 
+                            Nothing -> assocM k v (unirA kvs map)
+                            Just v2 -> assocM k v (unirA kvs map)
+
+--Ejercicio 4
+--4.1 YA HECHO
+--4.2
+
+--Propósito: devuelve un map vacío
+--Costo O(1)
+emptyM :: Map k v
+emptyM = Map []
+
+--Propósito: agrega una asociación clave-valor al map.
+--Costo O(1) ya que se utiliza la función cons de costo O(1).
+assocM :: Eq k => k -> v -> Map k v -> Map k v
+assocM k v (Map kvs) = Map ((k,v):kvs)
+
+--Propósito: encuentra un valor dado una clave.
+--Costo O(n) ya que se realiza la función buscarEn de costo O(n).
+lookupM :: Eq k => k -> Map k v -> Maybe v
+lookupM k (Map kvs) = buscarEn k kvs 
+
+--Costo O(n) siendo n la cantidad de elementos en la lista, ya que se realiza recursión sobre la misma.
+buscarEn :: k -> [(k,v)] -> Maybe v
+buscarEn _ [] = Nothing 
+buscarEn k ((k1,v1):kvs) = if k==k1
+                           then Just v1 
+                           else buscarEn k kvs 
+
+--Propósito: borra una asociación dada una clave.
+--Costo O(n) ya que se utiliza la función borrarEn de costo O(n).
+deleteM :: Eq k => k -> Map k v -> Map k v
+deleteM k (Map kvs) = borrarEn k kvs
+
+--Costo O(n) siendo n la cantidad de elementos en la lista, ya que se hace recursión sobre la misma.
+borrarEn :: k -> [(k,v)] -> [(k,v)]
+borrarEn _ [] = []
+borrarEn k ((k1,v1):kvs) = if k == k1 
+                           then borrarEn k kvs  
+                           else (k1,v1) : borrarEn k kvs 
+
+--Propósito: devuelve las claves del map
+--Costo O(n^2) ya que se utiliza la función clavesDe de costo O(n) y la función sinRepetidos de costo O(n^2).
+--Siendo n la cantidad de claves-valor en el Map.
+keys :: Map k v -> [k]
+keys (Map kvs) = sinRepetidos (clavesDe kvs)  
+
+--Costo O(n) siendo n la cantidad de elementos de la lista, ya que se hace recursión sobre la misma.
+clavesDe :: [(k,v)] -> [k]
+clavesDe [] = []
+clavesDe ((k,v):kvs) = k : clavesDe kvs 
+
+--Costo O(n^2) siendo n la cantidad de elementos en la lista, se realiza recursión sobre la misma y la función elem de costo O(n) por cada elemento de la recursión.
+sinRepetidos :: [a] -> [a] 
+sinRepetidos []     = []
+sinRepetidos (x:xs) = if elem x xs 
+                      then xs 
+                      else x : sinRepetidos xs
+
+--4.3
+--Propósito: devuelve un map vacío
+--Costo O(1)
+emptyM :: Map k v
+emptyM = Map [] []
+
+--Propósito: 
